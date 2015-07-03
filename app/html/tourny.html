@@ -1,0 +1,32 @@
+<h1 class="text-center tournament_name">{{tournyInfo.name}} <small>({{tournyInfo.division}})</small></h1>
+<h4 class="text-center tournament_date"><small ng-bind-html="escapeHTML(tournyInfo.date)"></small></h4>
+<h2 class="text-center">Pool Play</h2>
+<div class="row pool_play_table">
+    <div class="col-xs-{{colWidth}}" ng-repeat="pool in tournyInfo.poolFormat">
+        <table class="table">
+            <thead class="text-center">
+                <th class="text-center">{{tournyInfo.poolNames[$index]}}</th>
+            </thead>
+            <tr ng-repeat="team in pool | orderBy:getWinPercentage:true">
+                <td>
+                    <div class="pool_play_td">
+                        <span class="pool_play_team_name">{{tournyInfo.teams[team-1]}}<span class="pool_play_rank">({{team}})</span></span>
+                        <span class="pool_play_results"><span class="activeColor">0 - 0</span></span>
+                        <span class="pool_play_record">{{tournyInfo.poolPlayRecords[team].w}} - {{tournyInfo.poolPlayRecords[team].l}}</span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="pool_play_games">
+    <div class="row">
+        <div class="col-xs-{{colWidth}}" ng-repeat="pool in tournyInfo.poolGames">
+            <div class="pool_play_game text-center" ng-repeat="game in pool">
+                <span ng-click="togglePoolPlayGame($parent.$index, $index, 0)" ng-class="{'selected' : game[0].selected}">{{tournyInfo.teams[game[0].id-1]}}</span> vs.
+                <span ng-click="togglePoolPlayGame($parent.$index, $index, 1)" ng-class="{'selected' : game[1].selected}">{{tournyInfo.teams[game[1].id-1]}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<h2 class="text-center">Championship Bracket</h2>

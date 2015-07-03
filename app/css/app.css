@@ -1,0 +1,80 @@
+/* app css stylesheet */
+
+body {
+  font-family: 'Mallanna', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+  text-rendering: optimizeLegibility;
+}
+
+.navPadding {
+  padding-top: 70px;
+}
+
+.pool_play_table {
+  width: 70%;
+  margin: 0 auto 40px auto;
+}
+
+.tournament_name {
+  margin-bottom: -10px;
+}
+
+.tournament_date {
+  margin-bottom: 60px;
+}
+
+.pool_play_td {
+  width: 75%;
+  min-width: 190px;
+  margin: 0 auto;
+}
+
+.pool_play_team_name {
+  float: left;
+  width: 60%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pool_play_rank {
+  float: right;
+}
+
+.pool_play_record,
+.pool_play_results {
+  float: right;
+  width: 20%;
+  text-align: right;
+}
+
+.pool_play_results {
+  opacity: 0;
+}
+
+.activeColor {
+  color: rgb(251, 51, 12) !important;
+}
+
+.pool_play_games {
+  width: 80%;
+  margin: 0 auto 40px auto;
+}
+
+.pool_play_game {
+  margin: 10px;
+}
+
+.pool_play_game > span {
+  padding: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.pool_play_game > span:hover,
+.pool_play_game > span.selected {
+  color: white;
+  background: rgb(255, 138, 0);
+  /*background: rgb(255, 211, 0);*/
+}

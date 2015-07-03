@@ -1,0 +1,28 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand activeColor" href="#/">MADNESS</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="">Dashboard</a></li>
+            <li><a href="">Brackets</a></li>
+            <li ng-if="tournyInfo" class="active"><a href="">{{tournyInfo.name}} ({{tournyInfo.division}})</a></li>
+        </ul>
+        <!--<form class="navbar-form navbar-left input-group" role="search">-->
+        <!--<div class="form-group input-group">-->
+        <!--<input type="text" class="form-control" placeholder="Search . . .">-->
+        <!--<span class="input-group-btn">-->
+        <!--<button class="btn btn-default navbar-btn" type="button">-->
+        <!--<span class="glyphicon glyphicon-search" aria-hidden="true"></span>-->
+        <!--</button>-->
+        <!--</span>-->
+        <!--</div>-->
+        <!--</form>-->
+        <div class="navbar-right">
+            <span class="navbar-text">{{user.name}}</span>
+            <button type="button" class="btn btn-default navbar-btn btn-xs">
+                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+</nav>
