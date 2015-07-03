@@ -36,11 +36,11 @@ config(['$routeProvider', function($routeProvider) {
         controller: "homeCtrl"
       }).
       when('/profile/:profile_id', {
-        templateUrl: '/app/html/profile.html',
+        templateUrl: 'app/html/profile.html',
         controller: 'ProfileCtrl'
       }).
       when('/tournament/:tournament_id', {
-          templateUrl: '/app/html/bracket.html',
+          templateUrl: 'app/html/bracket.html',
           controller: "BracketCtrl"
       }).
       otherwise({redirectTo: '/'});
