@@ -23,8 +23,8 @@ controller("ProfileCtrl", ["$scope", "$location",'UserService',
     function ($scope, $location, UserService) {
         $scope.user = UserService.get();
         $scope.templates = {
-            navbar: "html/nav.html",
-            profile: "html/dashboard.html"
+            navbar: "app/html/nav.html",
+            profile: "app/html/dashboard.html"
         };
         $scope.loadTournament = function () {
             var id = "314159";
@@ -35,8 +35,8 @@ controller("BracketCtrl", ["$scope", 'UserService', "$sce",
     function ($scope, UserService, $sce) {
         $scope.user = UserService.get();
         $scope.templates = {
-            navbar: "html/nav.html",
-            tourny: "html/tourny.html"
+            navbar: "app/html/nav.html",
+            tourny: "app/html/tourny.html"
         };
         $scope.escapeHTML = function (html) {
             return $sce.trustAsHtml(html);
