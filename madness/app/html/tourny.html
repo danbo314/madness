@@ -2,12 +2,12 @@
 <h4 class="text-center tournament_date"><small ng-bind-html="escapeHTML(tournyInfo.date)"></small></h4>
 <h2 class="text-center">Pool Play</h2>
 <div class="row pool_play_table">
-    <div class="col-xs-{{colWidth}}" ng-repeat="pool in tournyInfo.poolFormat">
-        <table class="table">
+    <div class="col-xs-12 col-sm-{{colWidth}}" ng-repeat="pool in tournyInfo.poolFormat">
+        <table id="{{tournyInfo.poolNames[$index]}}" class="table">
             <thead class="text-center">
-                <th class="text-center">{{tournyInfo.poolNames[$index]}}</th>
+                <th class="text-center">Pool {{tournyInfo.poolNames[$index]}}</th>
             </thead>
-            <tr ng-repeat="team in pool | orderBy:getWinPercentage:true">
+            <tr ng-repeat="team in pool | orderBy: getWinPercentage:true">
                 <td>
                     <div class="pool_play_td">
                         <span class="pool_play_team_name">{{tournyInfo.teams[team-1]}}<span class="pool_play_rank">({{team}})</span></span>
@@ -21,12 +21,24 @@
 </div>
 <div class="pool_play_games">
     <div class="row">
-        <div class="col-xs-{{colWidth}}" ng-repeat="pool in tournyInfo.poolGames">
+        <div class="col-xs-12 col-sm-{{colWidth}}" ng-repeat="pool in tournyInfo.poolGames">
             <div class="pool_play_game text-center" ng-repeat="game in pool">
-                <span ng-click="togglePoolPlayGame($parent.$index, $index, 0)" ng-class="{'selected' : game[0].selected}">{{tournyInfo.teams[game[0].id-1]}}</span> vs.
-                <span ng-click="togglePoolPlayGame($parent.$index, $index, 1)" ng-class="{'selected' : game[1].selected}">{{tournyInfo.teams[game[1].id-1]}}</span>
+                <span class="pool_play_team left text-right pull-left" ng-click="togglePoolPlayGame($parent.$index, $index, 0)" ng-class="{'selected' : game[0].selected}">{{tournyInfo.teams[game[0].id-1]}}</span>
+                <span class="vs">vs.</span>
+                <span class="pool_play_team right text-left pull-right" ng-click="togglePoolPlayGame($parent.$index, $index, 1)" ng-class="{'selected' : game[1].selected}">{{tournyInfo.teams[game[1].id-1]}}</span>
             </div>
         </div>
     </div>
 </div>
 <h2 class="text-center">Championship Bracket</h2>
+<div class="championship_bracket row">
+    <div class="col-sm-{{brackWidth}}" ng-repeat="tier in tournyInfo.bracketFormat" ng-init="tierIdx = $index">
+        <div class="bracket_game_wrapper">
+            <div class="bracket_game" ng-repeat="(key, game) in tier">
+                <div class="bracket_team text-center" ng-repeat="team in game.teams track by $index" ng-click="toggleBracketGame(tierIdx, key, team.id, $index)" ng-class="{'selected' : team.selected}">
+                    {{tournyInfo.teams[team.id-1]}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

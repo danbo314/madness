@@ -63,18 +63,67 @@ body {
 }
 
 .pool_play_game {
+  position: relative;
   margin: 10px;
 }
 
-.pool_play_game > span {
+.pool_play_team {
   padding: 0 5px;
   cursor: pointer;
-  border-radius: 5px;
+  width: 45%;
 }
 
-.pool_play_game > span:hover,
-.pool_play_game > span.selected {
+.pool_play_team.left {
+  border-radius: 50% 5px 5px 50%;
+}
+
+.pool_play_team.right {
+  border-radius: 5px 50% 50% 5px;
+}
+
+.pool_play_team:hover,
+.pool_play_team.selected {
   color: white;
   background: rgb(255, 138, 0);
   /*background: rgb(255, 211, 0);*/
+}
+
+.pool_play_team.selected {
+  cursor: default;
+}
+
+.championship_bracket {
+  margin-bottom: 40px;
+}
+
+.championship_bracket > div[class^="col-"] {
+  height: 200px;
+}
+
+.bracket_game {
+  margin: 60px;
+}
+
+.bracket_team {
+  background: #F2F2F2;
+  padding: 0px 3px;
+  margin: 5px;
+  font-size: 24px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.bracket_team:hover,
+.bracket_team.selected {
+  background: #FFD701;
+}
+
+.bracket_team.selected {
+  cursor: default;
+}
+
+.bracket_game_wrapper {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }

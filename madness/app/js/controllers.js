@@ -45,7 +45,7 @@ controller("BracketCtrl", ["$scope", 'UserService', "$sce",
             name: "U.S. Open",
             division: "Open",
             date: "July 2<sup>nd</sup> 2015 - June 5<sup>th</sup> 2015",
-            poolNames: ["Pool A", "Pool B"]
+            poolNames: ["A", "B"]
         };
         $scope.tournyInfo.poolFormat = [
             [1,3,6,7,10,12],
@@ -68,6 +68,16 @@ controller("BracketCtrl", ["$scope", 'UserService', "$sce",
         $scope.tournyInfo.poolPlayRecords = getDefaultRecords($scope.tournyInfo.teams);
         $scope.tournyInfo.poolGames = getPoolPlayGames($scope.tournyInfo.poolFormat);
         $scope.colWidth = poolToColRatio[$scope.tournyInfo.poolFormat.length];
+        $scope.getWinPercentage = function (id) {
+            var record = $scope.tournyInfo.poolPlayRecords[id],
+                winP = record.w || record.l ? record.w / (record.w+record.l) : 0;
+
+            return winP;
+        };
+
+        $scope.tournyInfo.poolFormatCopy = $scope.tournyInfo.poolFormat.slice();
+        $scope.tournyInfo.poolResults = getSortedPools($scope.tournyInfo.poolFormatCopy, $scope.getWinPercentage);
+        $scope.tournyInfo.bracketFormat = [];
         $scope.togglePoolPlayGame = function (poolIdx, gameIdx, teamIdx) {
             var otherIdx = teamIdx ? 0 : 1,
                 selectedGame = $scope.tournyInfo.poolGames[poolIdx][gameIdx][teamIdx],
@@ -87,14 +97,40 @@ controller("BracketCtrl", ["$scope", 'UserService', "$sce",
                 selectedGame.selected = true;
                 unSelectedGame.selected = false;
             }
-        };
-        $scope.getWinPercentage = function (id) {
-            var record = $scope.tournyInfo.poolPlayRecords[id],
-                winP = record.w || record.l ? record.w / (record.w+record.l) : 0;
 
-            return winP;
+            $scope.tournyInfo.poolResults = getSortedPools($scope.tournyInfo.poolFormatCopy, $scope.getWinPercentage);
+            updateFirstRoundBracket($scope.tournyInfo.bracketFormat[0], $scope.tournyInfo.poolResults);
+        };
+        $scope.tournyInfo.bracketFormat[0] = {
+            s1: { upBracket: "f1", upGame: 0, teams: [{ selected: false, id: $scope.tournyInfo.poolResults[0][0] }, { selected: false, id: $scope.tournyInfo.poolResults[1][1] }] },
+            s2: { upBracket: "f1", upGame: 1, teams: [{ selected: false, id: $scope.tournyInfo.poolResults[1][0] }, { selected: false, id: $scope.tournyInfo.poolResults[0][1] }] }
+        };
+        $scope.tournyInfo.bracketFormat[1] = {
+            f1: { upBracket: "w1", upGame: 0, teams: [{ selected: false, id: null }, { selected: false, id: null }] }
+        };
+        $scope.tournyInfo.bracketFormat[2] = {
+            w1: { teams: [{ selected: true, id: null }] }
+        };
+        $scope.brackWidth = poolToColRatio[$scope.tournyInfo.bracketFormat.length];
+        $scope.toggleBracketGame = function(bracketTier, gameKey, teamId, teamIdx) {
+            var notIdx = teamIdx ? 0 : 1,
+                currentGame = $scope.tournyInfo.bracketFormat[bracketTier][gameKey];
+
+            if (!currentGame.teams[teamIdx].selected) {
+                currentGame.teams[teamIdx].selected = true;
+                currentGame.teams[notIdx].selected = false;
+
+                $scope.tournyInfo.bracketFormat[bracketTier + 1][currentGame.upBracket].teams[currentGame.upGame].id = teamId;
+            }
         };
     }]);
+
+function updateFirstRoundBracket (firstRound, results) {
+     firstRound.s1.teams[0].id = results[0][0];
+     firstRound.s1.teams[1].id = results[1][1];
+     firstRound.s2.teams[0].id = results[1][0];
+     firstRound.s2.teams[1].id = results[0][1];
+}
 
 function getDefaultRecords (teams) {
     var i,
@@ -134,3 +170,17 @@ function getPoolPlayGames (format) {
 
     return games;
 }
+
+function getSortedPools(poolFormat, getWinPerc) {
+    var i,
+        plen = poolFormat.length,
+        sorted = [];
+
+    for (i = 0; i < plen; i++) {
+        sorted[i] = poolFormat[i].sort(function (a, b) {
+            return getWinPerc(b) - getWinPerc(a);
+        });
+    }
+
+    return sorted;
+};
