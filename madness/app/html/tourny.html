@@ -9,27 +9,41 @@
             </thead>
             <tr ng-repeat="team in pool | orderBy: getWinPercentage:true">
                 <td>
-                    <div class="pool_play_td">
-                        <span class="pool_play_team_name">{{tournyInfo.teams[team-1]}}<span class="pool_play_rank">({{team}})</span></span>
+                    <div class="pool_play_td dropdown" ng-mouseover="showPoolPlayGames(team)" ng-mouseleave="hidePoolPlayGames(team)">
+                        <span class="pool_play_team_name" aria-haspopup="true" aria-expanded="true">
+                            <span class="dropdown-toggle">
+                                <span>{{tournyInfo.teams[team-1]}}</span>
+                                <span class="caret"></span>
+                            </span>
+                            <span class="pool_play_rank">({{team}})</span>
+                        </span>
                         <span class="pool_play_results"><span class="activeColor">0 - 0</span></span>
                         <span class="pool_play_record">{{tournyInfo.poolPlayRecords[team].w}} - {{tournyInfo.poolPlayRecords[team].l}}</span>
+                        <ul class="dropdown-menu" ng-show="checkPoolPlayVisibility(team)">
+                            <li ng-repeat="competitor in tournyInfo.poolGames[team]">
+                                <a>
+                                    <span class="pull-left">&nbsp;vs.&nbsp;{{tournyInfo.teams[competitor.id-1]}}</span>
+                                    <span class="pull-right"><span class="win" ng-click="toggleNewPPGame(team, $index, false)" ng-class="{'selected' : competitor.selected==false}">W</span>-<span class="loss" ng-click="toggleNewPPGame(team, $index, true)" ng-class="{'selected' : competitor.selected}">L</span></span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </td>
             </tr>
         </table>
     </div>
 </div>
-<div class="pool_play_games">
-    <div class="row">
-        <div class="col-xs-12 col-sm-{{colWidth}}" ng-repeat="pool in tournyInfo.poolGames">
-            <div class="pool_play_game text-center" ng-repeat="game in pool">
-                <span class="pool_play_team left text-right pull-left" ng-click="togglePoolPlayGame($parent.$index, $index, 0)" ng-class="{'selected' : game[0].selected}">{{tournyInfo.teams[game[0].id-1]}}</span>
-                <span class="vs">vs.</span>
-                <span class="pool_play_team right text-left pull-right" ng-click="togglePoolPlayGame($parent.$index, $index, 1)" ng-class="{'selected' : game[1].selected}">{{tournyInfo.teams[game[1].id-1]}}</span>
-            </div>
-        </div>
-    </div>
-</div>
+<!--<div class="pool_play_games">-->
+    <!--<div class="row">-->
+        <!--<div class="col-xs-12 col-sm-{{colWidth}}" ng-repeat="pool in tournyInfo.poolGames">-->
+            <!--<div class="pool_play_game text-center" ng-repeat="game in pool">-->
+                <!--<span class="pool_play_team left text-right pull-left" ng-click="togglePoolPlayGame($parent.$index, $index, 0)" ng-class="{'selected' : game[0].selected}">{{tournyInfo.teams[game[0].id-1]}}</span>-->
+                <!--<span class="vs">vs.</span>-->
+                <!--<span class="pool_play_team right text-left pull-right" ng-click="togglePoolPlayGame($parent.$index, $index, 1)" ng-class="{'selected' : game[1].selected}">{{tournyInfo.teams[game[1].id-1]}}</span>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
 <h2 class="text-center">Championship Bracket</h2>
 <div class="championship_bracket row">
     <div class="col-sm-{{brackWidth}}" ng-repeat="tier in tournyInfo.bracketFormat" ng-init="tierIdx = $index">

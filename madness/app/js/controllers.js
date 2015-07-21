@@ -74,7 +74,7 @@ controller("BracketCtrl", ["$scope", 'UserService', "$sce",
 
             return winP;
         };
-
+        $scope.visiblePoolPlayGames = initPoolPlayViews($scope.tournyInfo.teams);
         $scope.tournyInfo.poolFormatCopy = $scope.tournyInfo.poolFormat.slice();
         $scope.tournyInfo.poolResults = getSortedPools($scope.tournyInfo.poolFormatCopy, $scope.getWinPercentage);
         $scope.tournyInfo.bracketFormat = [];
@@ -123,7 +123,72 @@ controller("BracketCtrl", ["$scope", 'UserService', "$sce",
                 $scope.tournyInfo.bracketFormat[bracketTier + 1][currentGame.upBracket].teams[currentGame.upGame].id = teamId;
             }
         };
+        $scope.showPoolPlayGames = function (team) {
+            this.visiblePoolPlayGames[team] = true;
+        };
+        $scope.hidePoolPlayGames = function (team) {
+            this.visiblePoolPlayGames[team] = false;
+        };
+        $scope.checkPoolPlayVisibility = function (team) {
+            return this.visiblePoolPlayGames[team];
+        };
+        $scope.toggleNewPPGame = function (team, competitorIdx, toggle) {
+            var firstGame = this.tournyInfo.poolGames[team][competitorIdx],
+                compId = firstGame.id,
+                secondGame = this.tournyInfo.poolGames[compId][getPoolPlayGameById(this.tournyInfo.poolGames[compId], team)];
+
+            if (toggle && !firstGame.selected || !toggle && firstGame.selected !== false) {
+                if (firstGame.selected !== null && firstGame.selected !== undefined) {
+                    if (toggle) {
+                        this.tournyInfo.poolPlayRecords[team].w--;
+                        this.tournyInfo.poolPlayRecords[compId].l--;
+                    }
+                    else {
+                        this.tournyInfo.poolPlayRecords[team].l--;
+                        this.tournyInfo.poolPlayRecords[compId].w--;
+                    }
+                }
+
+                if (toggle) {
+                    this.tournyInfo.poolPlayRecords[team].l++;
+                    this.tournyInfo.poolPlayRecords[compId].w++;
+                }
+                else {
+                    this.tournyInfo.poolPlayRecords[team].w++;
+                    this.tournyInfo.poolPlayRecords[compId].l++;
+                }
+
+                firstGame.selected = toggle;
+                secondGame.selected = !toggle;
+            }
+
+            this.tournyInfo.poolResults = getSortedPools(this.tournyInfo.poolFormatCopy, this.getWinPercentage);
+            updateFirstRoundBracket(this.tournyInfo.bracketFormat[0], this.tournyInfo.poolResults);
+        };
     }]);
+
+function getPoolPlayGameById (games, secId) {
+    var i,
+        glen = games.length;
+
+    for (i = 0; i < glen; i++) {
+        if (games[i].id == secId) {
+            return i;
+        }
+    }
+}
+
+function initPoolPlayViews (teams) {
+    var i,
+        tlen = teams.length,
+        obj = {};
+
+    for (i = 0; i < tlen; i++) {
+        obj[i+1] = false;
+    }
+
+    return obj;
+}
 
 function updateFirstRoundBracket (firstRound, results) {
      firstRound.s1.teams[0].id = results[0][0];
@@ -145,25 +210,33 @@ function getDefaultRecords (teams) {
 }
 
 function getPoolPlayGames (format) {
-    var games = [],
+    var games = {},
         flen = format.length,
         i, j, k,
         pool,
-        plen;
+        plen,
+        t1, t2;
 
     for (i = 0; i < flen; i++) {
-        if (!games[i]) {
-            games[i] = [];
-        }
         pool = format[i];
         plen = pool.length;
         for (j = 0; j < plen; j++) {
+            t1 = pool[j];
+            if (!games[t1]) {
+                games[t1] = [];
+            }
             for (k = j+1; k < plen; k++) {
-                games[i].push([{
-                    id: pool[j]
-                }, {
-                    id: pool[k]
-                }]);
+                t2 = pool[k];
+                if (!games[t2]) {
+                    games[t2] = [];
+                }
+
+                games[t1].push({
+                    id: t2
+                });
+                games[t2].push({
+                    id: t1
+                });
             }
         }
     }

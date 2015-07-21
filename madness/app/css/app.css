@@ -130,3 +130,36 @@ body {
   top: 50%;
   transform: translateY(-50%);
 }
+
+.pool_play_td.dropdown > .dropdown-menu:not(.ng-hide) {
+  display: block;
+  margin-top: 20px;
+}
+
+.pool_play_td .dropdown-toggle {
+  cursor: pointer;
+  display: inline-block;
+  width: 60%;
+}
+
+.pool_play_td .dropdown-toggle > span {
+  display: inline-block;
+}
+
+.pool_play_td .caret {
+  margin-left: auto;
+}
+
+.win,
+.loss {
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.win.selected {
+  color: green;
+}
+
+.loss.selected {
+  color: #ff1144;
+}
