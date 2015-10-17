@@ -7,23 +7,6 @@ var madness = angular.module('madnessApp', [
     "ngSanitize"
 ]);
 
-madness.factory('UserService', function() {
-    var user = {
-        name: "Dan Bolivar"
-    };
-
-    return {
-        get: function () {
-            return user;
-        }
-    };
-}).
-factory("TournamentService", function () {
-    var testTourny = {
-
-    };
-
-});
 
 madness.
 config(function($locationProvider) {

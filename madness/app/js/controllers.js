@@ -3,25 +3,75 @@
 /* Controllers */
 
 var madnessControllers = angular.module('madnessControllers', []),
-    poolToColRatio = {
-        1: 12,
-        2: 6,
-        3: 4,
-        4: 3
+    currentUser,
+    userDetails;
+
+function createLogout ($location) {
+    return function () {
+        Parse.User.logOut();
+        $location.path("/");
+    }
+}
+
+function getMyDetails (cb) {
+    FB.api('/me', function(response) {
+        userDetails = response;
+        if(cb) {
+            cb(response);
+        }
+    });
+}
+
+function userLinkCB ($scope, $location) {
+    return function (response) {
+        $location.path("/profile/"+response.id);
+        $scope.$apply();
     };
+}
+
+function populateUserDetailsCB ($scope) {
+    return function (response) {
+        $scope.user = response;
+    }
+}
 
 madnessControllers.
 controller('homeCtrl', ['$scope', "$location",
     function($scope, $location) {
-        $scope.loadProfile = function () {
-            // TODO: authentication and proper page id creation
-            var id="314159";
-            $location.path("/profile/"+id);
+        currentUser = Parse.User.current();
+
+        if (currentUser) {
+            getMyDetails(userLinkCB($scope, $location));
+        }
+        else {
+            console.log("no current user");
+        }
+
+        $scope.login = function () {
+            Parse.FacebookUtils.logIn(null, {
+                success: function(user) {
+                    if (!user.existed()) {
+                        console.log("User signed up and logged in through Facebook!");
+                    } else {
+                        console.log("User logged in through Facebook!");
+                    }
+
+                    getMyDetails(userLinkCB($scope, $location));
+                },
+                error: function(user, error) {
+                    alert("User cancelled the Facebook login or did not fully authorize.");
+                }
+            });
         };
     }]).
-controller("ProfileCtrl", ["$scope", "$location",'UserService',
-    function ($scope, $location, UserService) {
-        $scope.user = UserService.get();
+controller("ProfileCtrl", ["$scope", "$location",
+    function ($scope, $location) {
+        if (userDetails) {
+            $scope.user = userDetails;
+        }
+        else {
+            getMyDetails(populateUserDetailsCB($scope));
+        }
         $scope.templates = {
             navbar: "app/html/nav.html",
             profile: "app/html/dashboard.html"
@@ -29,11 +79,24 @@ controller("ProfileCtrl", ["$scope", "$location",'UserService',
         $scope.loadTournament = function () {
             var id = "314159";
             $location.path("/tournament/"+id);
-        }
+        };
+        $scope.logout = createLogout($location);
     }]).
-controller("BracketCtrl", ["$scope", 'UserService', "$sce",
-    function ($scope, UserService, $sce) {
-        $scope.user = UserService.get();
+controller("BracketCtrl", ["$scope", "$sce", "$location",
+    function ($scope, $sce, $location) {
+        var poolToColRatio = {
+            1: 12,
+            2: 6,
+            3: 4,
+            4: 3
+        };
+        $scope.logout = createLogout($location);
+        if (userDetails) {
+            $scope.user = userDetails;
+        }
+        else {
+            getMyDetails(populateUserDetailsCB($scope));
+        }
         $scope.templates = {
             navbar: "app/html/nav.html",
             tourny: "app/html/tourny.html"

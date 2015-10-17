@@ -6,24 +6,46 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>ND Ultimate</title>
+  <title>Madness &middot; Ultimate Pick'em</title>
   <base href="/madness/">
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="app/bower_components/html5-boilerplate/dist/css/normalize.css">
   <link rel="stylesheet" href="app/bower_components/html5-boilerplate/dist/css/main.css">
   <link rel="stylesheet" href="app/bower_components/bootstrap/dist/css/bootstrap.css">
-  <link href='//fonts.googleapis.com/css?family=Mallanna' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Mallanna|Oswald:400,700' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="app/css/app.css">
   <script src="app/bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
 </head>
 <body>
-  <div class="container-fluid">
-    <div ng-view class="view-frame"></div>
+  <div class="fullScreen container-fluid">
+    <div ng-view class="fullScreen view-frame"></div>
   </div>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+  <script src="https://www.parsecdn.com/js/parse-1.3.3.min.js"></script>
+  <script>
+    Parse.initialize("ocbksGx9ijgzufpf2fLpWVZVDHYha4XNJZ9r66eI", "fuCuIeras3QBr0YlYTpVn5Q079MjDIu3w8bSMYHi");
+
+    window.fbAsyncInit = function() {
+      Parse.FacebookUtils.init({
+        appId: '1647924355445143',
+        //status: true,
+        cookie: true,
+        xfbml: true,
+        version: 'v2.5'
+      });
+    };
+
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
   <script src="app/bower_components/angular-route/angular-route.js"></script>
   <script src="app/bower_components/angular-sanitize/angular-sanitize.js"></script>
   <script src="app/js/app.js"></script>
